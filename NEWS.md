@@ -1,7 +1,15 @@
 # News
 
-This is charybdis 3.5.2, Copyright (c) 2005-2016 Charybdis team.
+This is charybdis 3.5.2+EkiNetIrc, Copyright (c) 2005-2016 EkiNetIrc and the Charybdis team.
 See LICENSE for licensing details (GPL v2).
+
+## charybdis-3.5.2+EkiNetIrc
+
+### user
+- KILLs by services clients are no longer displayed as such to users; the client
+  will appear to quit with the message 'Disconnected by services'. The KILL
+  source and message will still be displayed to the user exiting, and to opers
+  via server notices.
 
 ## charybdis-3.5.2
 
