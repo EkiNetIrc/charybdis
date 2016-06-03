@@ -303,7 +303,7 @@ load_one_module(const char *path, int coremodule)
 		}
 	}
 
-	sendto_realops_snomask(SNO_GENERAL, L_ALL, "Cannot locate module %s", path);
+	sendto_realops_snomask(SNO_GENERAL, L_NETWIDE, "Cannot locate module %s", path);
 	return -1;
 }
 
@@ -412,7 +412,7 @@ mo_modreload(struct Client *client_p, struct Client *source_p, int parc, const c
 
 	if((load_one_module(m_bn, check_core) == -1) && check_core)
 	{
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Error reloading core module: %s: terminating ircd", m_bn);
 		ilog(L_MAIN, "Error loading core module %s: terminating ircd", m_bn);
 		exit(0);
@@ -485,7 +485,7 @@ mo_modrestart(struct Client *client_p, struct Client *source_p, int parc, const 
 	load_core_modules(0);
 	rehash(0);
 
-	sendto_realops_snomask(SNO_GENERAL, L_ALL,
+	sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 			     "Module Restart: %d modules unloaded, %d modules loaded",
 			     modnum, num_mods);
 	ilog(L_MAIN, "Module Restart: %d modules unloaded, %d modules loaded", modnum, num_mods);
@@ -554,7 +554,7 @@ static char *myErrorTable[] = { "Loading file as object failed\n",
 void
 undefinedErrorHandler(const char *symbolName)
 {
-	sendto_realops_snomask(SNO_GENERAL, L_ALL, "Undefined symbol: %s", symbolName);
+	sendto_realops_snomask(SNO_GENERAL, L_NETWIDE, "Undefined symbol: %s", symbolName);
 	ilog(L_MAIN, "Undefined symbol: %s", symbolName);
 	return;
 }
@@ -566,7 +566,7 @@ multipleErrorHandler(NSSymbol s, NSModule old, NSModule new)
 	 ** This results in substantial leaking of memory... Should free one
 	 ** module, maybe?
 	 */
-	sendto_realops_snomask(SNO_GENERAL, L_ALL,
+	sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 			     "Symbol `%s' found in `%s' and `%s'",
 			     NSNameOfSymbol(s), NSNameOfModule(old), NSNameOfModule(new));
 	ilog(L_MAIN, "Symbol `%s' found in `%s' and `%s'",
@@ -579,7 +579,7 @@ void
 linkEditErrorHandler(NSLinkEditErrors errorClass, int errnum,
 		     const char *fileName, const char *errorString)
 {
-	sendto_realops_snomask(SNO_GENERAL, L_ALL,
+	sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 			     "Link editor error: %s for %s", errorString, fileName);
 	ilog(L_MAIN, "Link editor error: %s for %s", errorString, fileName);
 	return;
@@ -714,7 +714,7 @@ unload_one_module(const char *name, int warn)
 			break;
 		}
 	default:
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Unknown/unsupported MAPI version %d when unloading %s!",
 				     modlist[modindex]->mapi_version, modlist[modindex]->name);
 		ilog(L_MAIN, "Unknown/unsupported MAPI version %d when unloading %s!",
@@ -734,7 +734,7 @@ unload_one_module(const char *name, int warn)
 	if(warn == 1)
 	{
 		ilog(L_MAIN, "Module %s unloaded", name);
-		sendto_realops_snomask(SNO_GENERAL, L_ALL, "Module %s unloaded", name);
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE, "Module %s unloaded", name);
 	}
 
 	return 0;
@@ -770,7 +770,7 @@ load_a_module(const char *path, int warn, int core)
 	{
 		const char *err = dlerror();
 
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Error loading module %s: %s", mod_basename, err);
 		ilog(L_MAIN, "Error loading module %s: %s", mod_basename, err);
 		rb_free(mod_basename);
@@ -789,7 +789,7 @@ load_a_module(const char *path, int warn, int core)
 	    && (mapi_version = (int *) (uintptr_t) dlsym(tmpptr, "__mheader")) == NULL)
 	   || MAPI_MAGIC(*mapi_version) != MAPI_MAGIC_HDR)
 	{
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Data format error: module %s has no MAPI header.",
 				     mod_basename);
 		ilog(L_MAIN, "Data format error: module %s has no MAPI header.", mod_basename);
@@ -807,7 +807,7 @@ load_a_module(const char *path, int warn, int core)
 			{
 				ilog(L_MAIN, "Module %s indicated failure during load.",
 				     mod_basename);
-				sendto_realops_snomask(SNO_GENERAL, L_ALL,
+				sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 						     "Module %s indicated failure during load.",
 						     mod_basename);
 				dlclose(tmpptr);
@@ -842,7 +842,7 @@ load_a_module(const char *path, int warn, int core)
 	default:
 		ilog(L_MAIN, "Module %s has unknown/unsupported MAPI version %d.",
 		     mod_basename, MAPI_VERSION(*mapi_version));
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Module %s has unknown/unsupported MAPI version %d.",
 				     mod_basename, *mapi_version);
 		dlclose(tmpptr);
@@ -866,7 +866,7 @@ load_a_module(const char *path, int warn, int core)
 
 	if(warn == 1)
 	{
-		sendto_realops_snomask(SNO_GENERAL, L_ALL,
+		sendto_realops_snomask(SNO_GENERAL, L_NETWIDE,
 				     "Module %s [version: %s; MAPI version: %d] loaded at 0x%lx",
 				     mod_basename, ver, MAPI_VERSION(*mapi_version),
 				     (unsigned long) tmpptr);

@@ -291,6 +291,6 @@ ilog_error(const char *error)
 	errstr = strerror(e);
 
 	ilog(L_IOERROR, "%s: %d (%s)", error, e, errstr);
-	sendto_realops_snomask(SNO_DEBUG, L_ALL, "%s: %d (%s)",
+	sendto_realops_snomask(SNO_DEBUG, L_NETWIDE, "%s: %d (%s)",
 			error, e, errstr);
 }
